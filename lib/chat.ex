@@ -3,15 +3,18 @@ defmodule Chat.Server do
 
   # API
   def start_link do
-  	GenServer.start_link(__MODULE__, [])
+  	# We now start the GenServer with a `name` option.
+  	GenServer.start_link(__MODULE__, [], name: :chat_room)
+  end
+  
+  # And our function doesn't need to receive the pid anymore,
+  # as we can reference the proces with its unique name.
+  def add_message(message) do
+  	GenServer.cast(:chat_room, {:add_message, message})
   end
 
-  def add_message(pid, message) do
-  	GenServer.cast(pid, {:add_message, message})
-  end
-
-  def get_message(pid) do
-  	GenServer.call(pid, :get_message)
+  def get_message() do
+  	GenServer.call(:chat_room, :get_message)
   end
 
   # SERVER
