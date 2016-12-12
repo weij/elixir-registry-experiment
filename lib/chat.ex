@@ -1,4 +1,4 @@
-defmodule Chat do
+defmodule Chat.Server do
   use GenServer
 
   # API
