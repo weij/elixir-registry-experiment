@@ -2,7 +2,7 @@ defmodule Chat.Server do
   use GenServer
 
   # API
-  def start_link do
+  def start_link(name) do
   	# We now start the GenServer with a `name` option.
   	GenServer.start_link(__MODULE__, [], name: :chat_room)
   end
