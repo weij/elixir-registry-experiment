@@ -3,18 +3,26 @@ defmodule Chat.Server do
 
   # API
   def start_link(name) do
-  	# We now start the GenServer with a `name` option.
-  	GenServer.start_link(__MODULE__, [], name: :chat_room)
+  	# Instead of passing an atom to the `name` option, we send 
+    # a tuple. Here we extract this tuple to a private method
+    # called `via_tuple` that can be reused in every function
+  	GenServer.start_link(__MODULE__, [], name: via_tuple(name))
   end
   
   # And our function doesn't need to receive the pid anymore,
   # as we can reference the proces with its unique name.
-  def add_message(message) do
-  	GenServer.cast(:chat_room, {:add_message, message})
+  def add_message(room_name, message) do
+  	GenServer.cast(via_tuple(room_name), {:add_message, message})
   end
 
-  def get_message() do
-  	GenServer.call(:chat_room, :get_message)
+  def get_message(room_name) do
+  	GenServer.call(via_tuple(room_name), :get_message)
+  end
+
+  defp via_tuple(room_name) do
+    # the tuple always follow the same format:
+    # {:via, module_name, term}
+    {:via, Chat.Registry, {:chat_room, room_name}}
   end
 
   # SERVER
