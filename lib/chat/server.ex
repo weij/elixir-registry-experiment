@@ -22,7 +22,8 @@ defmodule Chat.Server do
   defp via_tuple(room_name) do
     # the tuple always follow the same format:
     # {:via, module_name, term}
-    {:via, Chat.Registry, {:chat_room, room_name}}
+    # make use `gproc` instead of `Chat.Registry`
+    {:via, :gproc, {:n, :l, {:chat_room, room_name}}}
   end
 
   # SERVER
